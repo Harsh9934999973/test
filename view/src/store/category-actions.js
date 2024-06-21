@@ -8,7 +8,10 @@ export const createCategoryData = (name,hindiName) => {
   return (dispatch) => {
       fetch(`${laravel_api}createcategory`, {
       method: 'post',
-      headers: {'Content-Type': 'application/json'},
+      headers: {
+        'Authorization': `Bearer ${sessionStorage.getItem('hjhgj')}`,
+        'Content-Type': 'application/json'
+    },
       body: JSON.stringify({
         name:name,
         hn_name:hindiName
