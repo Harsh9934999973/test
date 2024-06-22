@@ -35,7 +35,7 @@ function Sidenav({clickHandler}) {
                 <div className="sb-nav-link-icon"><i className="fas fa-chart-area"></i></div>
                 <span className='white'>Create Category</span>
                 </Link>
-                <Link className="nav-link" to='/dashboard/departments'>
+                <Link className="nav-link" to='/dashboard/managecategory'>
                 <div className="sb-nav-link-icon"><i className="fas fa-chart-area"></i></div>
                 <span className='white'>Manage Category</span>
                 </Link>

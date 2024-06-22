@@ -8,6 +8,7 @@ import ErrorPage from './ErrorPage';
 const Dashboard = React.lazy(() => import('./Dashboard/Dashboard'));
 const Main = React.lazy(() => import('./Dashboard/Main'));
 const CreateCategory = React.lazy(() => import('./Dashboard/CreateCategory'));
+const ManageCategories = React.lazy(() => import('./Dashboard/ManageCategories'));
 
 
 function App() {
@@ -19,6 +20,7 @@ function App() {
       <Route path='/dashboard' element={<Dashboard />}>
               <Route path='main' element={<Main />}/>
               <Route path='createcategory' element={<CreateCategory />}/>
+              <Route path='managecategory' element={<ManageCategories />}/>
               </Route>
       <Route path='/errorpage' element={<ErrorPage />} />
       </Routes>
