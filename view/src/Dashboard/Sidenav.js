@@ -31,10 +31,10 @@ function Sidenav({clickHandler}) {
             </a>
             <div className="collapse" id="collapseReport" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
                 <nav className="sb-sidenav-menu-nested nav">
-                <Link className="nav-link" to='/dashboard/createcategory'>
+                {/* <Link className="nav-link" to='/dashboard/createcategory'>
                 <div className="sb-nav-link-icon"><i className="fas fa-chart-area"></i></div>
                 <span className='white'>Create Category</span>
-                </Link>
+                </Link> */}
                 <Link className="nav-link" to='/dashboard/managecategory'>
                 <div className="sb-nav-link-icon"><i className="fas fa-chart-area"></i></div>
                 <span className='white'>Manage Category</span>

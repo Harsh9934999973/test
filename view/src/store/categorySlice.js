@@ -7,9 +7,17 @@ const categorySlice = createSlice({
     hindiName: '',
     message:'',
     loading: false,
-    success: false
+    success: false,
+    failed: false,
+    categories:[]
    },
   reducers: {
+    setFailed(state, action) {
+      state.failed = action.payload.failed;
+    },
+    setCategories(state, action) {
+      state.categories = action.payload.categories;
+    },
     setSuccess(state, action) {
         state.success = action.payload.success;
       },
