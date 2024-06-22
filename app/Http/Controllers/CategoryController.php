@@ -30,10 +30,20 @@ class CategoryController extends Controller
 
         if ($validator->fails()) {
             return response()->json([
-                'status' => 404,
-                'message' => $validator->errors()
+                'status' => 400,
+                'errors' => $validator->errors(),
+                'message' => 'Invalid inputs'
             ]);
         }
+
+        $existingCategory = Category::where('name', $request->input('name'))->first();
+
+    if ($existingCategory) {
+        return response()->json([
+            'status' => 400,
+            'message' => 'Category already exists'
+        ]);
+    }
 
         $category = new Category();
         $category->name = $request->input('name');
@@ -48,11 +58,27 @@ class CategoryController extends Controller
 
     public function update(Request $request, Category $category)
     {
-        // Validate incoming request
-        $request->validate([
+        $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'hn_name' => 'nullable|string|max:255',
         ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 400,
+                'errors' => $validator->errors(),
+                'message' => 'Invalid inputs'
+            ]);
+        }
+
+        $existingCategory = Category::where('name', $request->input('name'))->first();
+
+    if ($existingCategory) {
+        return response()->json([
+            'status' => 400,
+            'message' => 'Category already exists'
+        ]);
+    }
 
         // Ensure 'created_by' cannot be updated
         $data = $request->only(['name', 'hn_name']);

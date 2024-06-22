@@ -108,7 +108,7 @@ export default function FullFeaturedCrudGrid() {
   useEffect(() => {
     if(failed){
       dispatch(getCategoriesData())
-      dispatch(categoryActions.setFailed({failed:false}))
+      // dispatch(categoryActions.setFailed({failed:false}))
     }
   }, [failed])
 
