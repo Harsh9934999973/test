@@ -19,12 +19,7 @@ import { categoryActions } from '../store/categorySlice';
 import { createCategoryData, getCategoriesData, updateCategoryData } from '../store/category-actions';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
-// import {
-//   randomCreatedDate,
-//   randomTraderName,
-//   randomId,
-//   randomArrayItem,
-// } from '@mui/x-data-grid-generator';
+import Loading from '../Loading'
 
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -93,15 +88,17 @@ export default function FullFeaturedCrudGrid() {
 
   // const [rows, setRows] = React.useState(initialRows);
   const [rowModesModel, setRowModesModel] = React.useState({});
+  const [validation, setValidation] = React.useState(false)
 
   useEffect(() => {
     dispatch(getCategoriesData())
     return () => {
       dispatch(categoryActions.setMessage({message:''})) 
           dispatch(categoryActions.setCategories({categories: []}))
-          dispatch(categoryActions.setLoading({loading:false}))
+          dispatch(categoryActions.setLoading({loading:true}))
           dispatch(categoryActions.setSuccess({success:false}))
           dispatch(categoryActions.setFailed({failed:false}))
+          setValidation(false)
     }
   }, [])
 
@@ -123,6 +120,12 @@ export default function FullFeaturedCrudGrid() {
   };
 
   const handleSaveClick = (id) => () => {
+    const row = rows.filter(r => r.id === id)
+    if(row[0].name === ''){
+      setValidation(true)
+      dispatch(categoryActions.setMessage({message:'Name can not be empty'}))
+      return 
+    }
     setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } });
   };
 
@@ -148,11 +151,17 @@ export default function FullFeaturedCrudGrid() {
     const updatedRow = { ...newRow, isNew: false };
     // dispatch(categoryActions.setCategories({categories:(rows.map((row) => (row.id === newRow.id ? updatedRow : row)))}));
     console.log(newRow)
+    if(newRow.name === ''){
+      setValidation(true)
+      dispatch(categoryActions.setMessage({message:'Name can not be empty'}))
+      const row = rows.filter(r => r.id === newRow.id)
+      return row[0]
+    }
     if(newRow.isNew){
         dispatch(createCategoryData(newRow.name,newRow.hn_name))
         return updatedRow;
     }
-
+    
     dispatch(updateCategoryData(newRow.id, newRow.name,newRow.hn_name))
     
     return updatedRow;
@@ -252,16 +261,27 @@ export default function FullFeaturedCrudGrid() {
     }
     dispatch(categoryActions.setMessage({message:''})) 
     dispatch(categoryActions.setFailed({failed:false}))
+    setValidation(false)
 
   };
 
+  if(loading){
+    return <Loading />
+  }
+
   return (
-    <><Snackbar open={success} autoHideDuration={5000} onClose={handleCloseSuccess}>
+    <>
+    <Snackbar open={success} autoHideDuration={5000} onClose={handleCloseSuccess}>
     <Alert onClose={handleCloseSuccess} severity="success" sx={{ width: '100%' }}>
       {message}
     </Alert>
   </Snackbar>
   <Snackbar open={failed} autoHideDuration={5000} onClose={handleCloseFailed}>
+    <Alert onClose={handleCloseFailed} severity="error" sx={{ width: '100%' }}>
+    {message}
+    </Alert>
+  </Snackbar>
+  <Snackbar open={validation} autoHideDuration={5000} onClose={handleCloseFailed}>
     <Alert onClose={handleCloseFailed} severity="error" sx={{ width: '100%' }}>
     {message}
     </Alert>

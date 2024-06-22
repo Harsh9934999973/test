@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-const categorySlice = createSlice({
-  name: 'category',
+const subCategorySlice = createSlice({
+  name: 'subcategory',
   initialState: { 
     name: '',
     hindiName: '',
@@ -9,14 +9,14 @@ const categorySlice = createSlice({
     loading: true,
     success: false,
     failed: false,
-    categories:[]
+    subcategories:[]
    },
   reducers: {
     setFailed(state, action) {
       state.failed = action.payload.failed;
     },
-    setCategories(state, action) {
-      state.categories = action.payload.categories;
+    setSubCategories(state, action) {
+      state.subcategories = action.payload.subcategories;
     },
     setSuccess(state, action) {
         state.success = action.payload.success;

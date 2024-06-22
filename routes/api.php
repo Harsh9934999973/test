@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\SubCategoryController;
 
 
 
@@ -22,6 +23,14 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('/createcategory', [CategoryController::class, 'store']);
 
     Route::put('/categories/{category}', [CategoryController::class, 'update']);
+
+    Route::prefix('sub-categories')->group(function () {
+        Route::get('/', [SubCategoryController::class, 'index']);
+        Route::post('/', [SubCategoryController::class, 'store']);
+        Route::get('/{id}', [SubCategoryController::class, 'show']);
+        Route::put('/{id}', [SubCategoryController::class, 'update']);
+        Route::delete('/{id}', [SubCategoryController::class, 'destroy']);
+    });
 
 
 });
