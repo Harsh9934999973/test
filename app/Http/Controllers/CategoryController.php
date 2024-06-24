@@ -49,10 +49,12 @@ class CategoryController extends Controller
         $category->name = $request->input('name');
         $category->hn_name = $request->input('hn_name');
         $category->created_by = Auth::id(); 
+        $category->folder_name = strtolower(str_replace(' ', '_', $category->name)); // Example folder name generation
+
         $category->save();
 
         $uploadsPath = public_path('uploads');
-    $categoryFolder = $category->name; // Use category name for folder name
+    $categoryFolder = $category->folder_name; // Use category name for folder name
 
     // Check if the directory doesn't already exist
     if (!file_exists($uploadsPath . '/' . $categoryFolder)) {
