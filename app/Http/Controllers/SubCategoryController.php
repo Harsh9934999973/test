@@ -86,10 +86,11 @@ class SubCategoryController extends Controller
         }
     }
 
-    $subCategories = SubCategory::select('sub_categories.*', 'categories.name as category_name')
-        ->join('categories', 'sub_categories.category_id', '=', 'categories.id')
-        ->orderBy('sub_categories.created_at', 'desc')
-        ->get();
+    $subCategories = SubCategory::select('sub_categories.*', 'categories.name as category_name', 'year_values.value')
+    ->join('categories', 'sub_categories.category_id', '=', 'categories.id')
+    ->join('year_values', 'sub_categories.year_value_id', '=', 'year_values.id')
+    ->orderBy('sub_categories.created_at', 'desc') // Order by created_at in descending order
+    ->get();
 
     return response()->json(['sub_categories' => $subCategories, 'status' => 200], 200);
 }
@@ -146,8 +147,9 @@ return response()->json([
         $subCategory->updated_by = $subCategory->updated_by;
         $subCategory->save();
 
-        $subCategories = SubCategory::select('sub_categories.*', 'categories.name as category_name')
+        $subCategories = SubCategory::select('sub_categories.*', 'categories.name as category_name', 'year_values.value')
     ->join('categories', 'sub_categories.category_id', '=', 'categories.id')
+    ->join('year_values', 'sub_categories.year_value_id', '=', 'year_values.id')
     ->orderBy('sub_categories.created_at', 'desc') // Order by created_at in descending order
     ->get();
 

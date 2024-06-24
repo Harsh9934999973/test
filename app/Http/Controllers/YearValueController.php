@@ -11,7 +11,7 @@ class YearValueController extends Controller
     {
         $yearValues = YearValue::with('yearType')
                         ->where('year_type_id', $year_type_id)
-                        ->orderBy('created_at', 'desc') // Sort by created_at descending
+                        ->orderBy('value', 'desc') // Sort by created_at descending
                         ->get();
 
                         return response()->json(['years' => $yearValues, 'status' => 200], 200);
