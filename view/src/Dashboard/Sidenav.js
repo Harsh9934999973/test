@@ -48,11 +48,11 @@ function Sidenav({clickHandler}) {
             </a>
             <div className="collapse" id="collapseSubcategory" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
                 <nav className="sb-sidenav-menu-nested nav">
-                <Link className="nav-link" to='/dashboard/reportsocialcategory'>
+                <Link className="nav-link" to='/dashboard/createsubcategory'>
                 <div className="sb-nav-link-icon"><i className="fas fa-chart-area"></i></div>
                 <span className='white'>Create Sub-Category</span>
                 </Link>
-                <Link className="nav-link" to='/dashboard/departments'>
+                <Link className="nav-link" to='/dashboard/managesubcategory'>
                 <div className="sb-nav-link-icon"><i className="fas fa-chart-area"></i></div>
                 <span className='white'>Manage Sub-Category</span>
                 </Link>

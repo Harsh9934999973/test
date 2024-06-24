@@ -4,6 +4,7 @@ import userSlice from './userSlice';
 import signinSlice from './signinSlice';
 import errorSlice from './errorSlice';
 import categorySlice from './categorySlice';
+import subCategorySlice from './subCategorySlice';
 
 
 const store = configureStore({
@@ -11,7 +12,8 @@ const store = configureStore({
     user: userSlice.reducer,
     signin: signinSlice.reducer,
     error:errorSlice.reducer,
-    category:categorySlice.reducer
+    category:categorySlice.reducer,
+    subcategory:subCategorySlice.reducer
   },
   // middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(logger),
 

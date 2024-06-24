@@ -6,12 +6,16 @@ const subCategorySlice = createSlice({
     name: '',
     hindiName: '',
     message:'',
+    categoryId:'',
     loading: true,
     success: false,
     failed: false,
     subcategories:[]
    },
   reducers: {
+    setCategoryId(state, action) {
+      state.categoryId = action.payload.categoryId;
+    },
     setFailed(state, action) {
       state.failed = action.payload.failed;
     },
@@ -36,6 +40,6 @@ const subCategorySlice = createSlice({
   },
 });
 
-export const categoryActions = categorySlice.actions;
+export const subCategoryActions = subCategorySlice.actions;
 
-export default categorySlice;
+export default subCategorySlice;

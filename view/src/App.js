@@ -9,6 +9,8 @@ const Dashboard = React.lazy(() => import('./Dashboard/Dashboard'));
 const Main = React.lazy(() => import('./Dashboard/Main'));
 const CreateCategory = React.lazy(() => import('./Dashboard/CreateCategory'));
 const ManageCategories = React.lazy(() => import('./Dashboard/ManageCategories'));
+const CreateSubCategory = React.lazy(() => import('./Dashboard/CreateSubCategories'));
+const ManageSubCategories = React.lazy(() => import('./Dashboard/ManageSubCategories'));
 
 
 function App() {
@@ -21,6 +23,8 @@ function App() {
               <Route path='main' element={<Main />}/>
               <Route path='createcategory' element={<CreateCategory />}/>
               <Route path='managecategory' element={<ManageCategories />}/>
+              <Route path='createsubcategory' element={<CreateSubCategory />}/>
+              <Route path='managesubcategory' element={<ManageSubCategories />}/>
               </Route>
       <Route path='/errorpage' element={<ErrorPage />} />
       </Routes>

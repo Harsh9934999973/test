@@ -26,34 +26,6 @@ const Alert = React.forwardRef(function Alert(props, ref) {
 });
 
 
-const roles = ['Market', 'Finance', 'Development'];
-const randomRole = () => {
-  return roles[1];
-};
-
-const initialRows = [
-  {
-    id: 1,
-    name: "Test1",
-    hn_name: ''
-  },
-  {
-    id: 2,
-    name: "Test2",
-    hn_name: ''
-  },
-  {
-    id: 3,
-    name: "Test3",
-    hn_name: ''
-  },
-  {
-    id: 4,
-    name: "Test4",
-    hn_name: ''
-  }
-];
-
 function EditToolbar(props) {
   const { dispatch, setRowModesModel, rows } = props;
 
