@@ -1,10 +1,16 @@
-import React,{useEffect} from 'react';
+import React,{useEffect, useState} from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { categoryActions } from '../store/categorySlice';
 import { createCategoryData } from '../store/category-actions';
 import { useNavigate } from "react-router-dom";
 import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert from '@mui/material/Alert';
+
+const Alert = React.forwardRef(function Alert(props, ref) {
+  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
 
 const CreateCategory = () => {
 
@@ -16,40 +22,72 @@ const CreateCategory = () => {
     const message = useSelector((state) => state.category.message);
     const loading = useSelector((state) => state.category.loading);
     const success = useSelector((state) => state.category.success);
+    const failed = useSelector((state) => state.category.failed);
+
+    const [validation, setValidation] = useState(false)
 
     useEffect(() => {
-
+        dispatch(categoryActions.setLoading({loading:false}))
     return () => {
-        dispatch(categoryActions.setMessage({message:''})) 
-          dispatch(categoryActions.setLoading({loading:false}))
+        // dispatch(categoryActions.setMessage({message:''})) 
+        //   dispatch(categoryActions.setLoading({loading:false}))
           dispatch(categoryActions.setName({name:''}))
           dispatch(categoryActions.setHindiName({hindiName:''}))
-          dispatch(categoryActions.setSuccess({success:false}))
+          setValidation(false)
+          dispatch(categoryActions.setFailed({failed:false}))
     } 
     }, [])
 
     useEffect(() => {
         if(success){
-            return navigate(`/dashboard/main`);
+            return navigate(`/dashboard/managecategory`);
         }
     }, [success])
 
     const onNameChangeHandler = (event) => {
         dispatch(categoryActions.setMessage({message:''}))
+        setValidation(false)
         dispatch(categoryActions.setName({name:event.target.value}))
       }  
   
       const onHindiNameChangeHandler = (event) => {
         dispatch(categoryActions.setMessage({message:''}))
+        setValidation(false)
         dispatch(categoryActions.setHindiName({hindiName:event.target.value}))
         
       } 
 
       const handleSubmit = () => {
+        if(name === ''){
+            dispatch(categoryActions.setMessage({message:'Please enter a name'}))
+            setValidation(true)
+            return
+        }
         dispatch(createCategoryData(name, hindiName))
       }
 
+      const handleCloseFailed = (event, reason) => {
+        if (reason === 'clickaway') {
+          return;
+        }
+        dispatch(categoryActions.setMessage({message:''})) 
+        dispatch(categoryActions.setFailed({failed:false}))
+        setValidation(false)
+    
+      };
+
     return (
+        <>
+        <Snackbar open={failed} autoHideDuration={5000} onClose={handleCloseFailed}>
+    <Alert onClose={handleCloseFailed} severity="error" sx={{ width: '100%' }}>
+    {message}
+    </Alert>
+  </Snackbar>
+        <Snackbar open={validation} autoHideDuration={5000} onClose={handleCloseFailed}>
+    <Alert onClose={handleCloseFailed} severity="error" sx={{ width: '100%' }}>
+    {message}
+    </Alert>
+  </Snackbar>
         <div className="container-fluid">
         <div className="card">
             <div className="card-body">
@@ -71,6 +109,7 @@ const CreateCategory = () => {
             </div>
         </div>
     </div>
+    </>
     )
 }
 

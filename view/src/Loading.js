@@ -8,7 +8,7 @@ function Loading({id, name}) {
       <Box sx={{ width: '100%' }}>
        <LinearProgress />
       </Box>
-      <h2 className='tc mt2 b'>Loading...</h2>
+      {/* <h2 className='tc mt2 b'>Loading...</h2> */}
       </div>
 }
 

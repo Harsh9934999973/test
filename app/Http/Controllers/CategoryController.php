@@ -13,7 +13,7 @@ class CategoryController extends Controller
     public function index()
     {
         // Fetch all categories
-        $categories = Category::all();
+        $categories = Category::orderBy('created_at', 'desc')->get();
 
         // Return a JSON response with all categories
         return response()->json(['status' => 200, 'categories' => $categories],200);
@@ -51,7 +51,16 @@ class CategoryController extends Controller
         $category->created_by = Auth::id(); 
         $category->save();
 
-        $categories = Category::all();
+        $uploadsPath = public_path('uploads');
+    $categoryFolder = $category->name; // Use category name for folder name
+
+    // Check if the directory doesn't already exist
+    if (!file_exists($uploadsPath . '/' . $categoryFolder)) {
+        // Create the directory
+        mkdir($uploadsPath . '/' . $categoryFolder, 0755, true);
+    }
+
+        $categories = Category::orderBy('created_at', 'desc')->get();
 
         return response()->json(['categories' => $categories, 'status' => 200], 200);
     }
@@ -87,7 +96,7 @@ class CategoryController extends Controller
         // Update the category with the validated data
         $category->update($data);
 
-        $categories = Category::all();
+        $categories = Category::orderBy('created_at', 'desc')->get();
 
         // Optionally, return a response indicating success
         return response()->json(['status' => 200, 'categories' => $categories],200);

@@ -68,11 +68,11 @@ function EditToolbar(props) {
   };
 
   return (
-    <GridToolbarContainer>
-      <Button color="primary" startIcon={<AddIcon />} onClick={handleClick}>
-        Add category
-      </Button>
-    </GridToolbarContainer>
+    // <GridToolbarContainer>
+    //   <Button color="primary" startIcon={<AddIcon />} onClick={handleClick}>
+       <h3>Manage category</h3>
+    //   </Button>
+    // </GridToolbarContainer>
   );
 }
 
