@@ -2,7 +2,7 @@ import { subCategoryActions } from './subCategorySlice';
 import {laravel_api} from '../configuration';
 import { errorActions } from './errorSlice';
 
-export const createSubCategoryData = (name,hindiName,categoryId) => {
+export const createSubCategoryData = (name,hindiName,categoryId, yearValueId) => {
   
     return (dispatch) => {
         fetch(`${laravel_api}sub-categories`, {
@@ -14,7 +14,8 @@ export const createSubCategoryData = (name,hindiName,categoryId) => {
         body: JSON.stringify({
           name:name,
           hn_name:hindiName,
-          category_id: categoryId
+          category_id: categoryId,
+          year_value_id: yearValueId
         })
       })
         .then(response => response.json())

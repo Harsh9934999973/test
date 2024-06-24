@@ -9,10 +9,10 @@ class YearValue extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['year_type', 'value'];
+    protected $fillable = ['year_type_id', 'value'];
 
     public function yearType()
     {
-        return $this->belongsTo(YearType::class, 'year_type');
+        return $this->belongsTo(YearType::class);
     }
 }
