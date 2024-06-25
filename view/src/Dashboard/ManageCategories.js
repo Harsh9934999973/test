@@ -146,6 +146,7 @@ export default function FullFeaturedCrudGrid() {
   const columns = [
     { field: 'name', headerName: 'Name', width: 180, editable: true },
     { field: 'hn_name', headerName: 'Hindi Name', width: 180, editable: true },
+    { field: 'folder_name', headerName: 'Folder Name', width: 180, editable: false },
     // {
     //   field: 'age',
     //   headerName: 'Age',

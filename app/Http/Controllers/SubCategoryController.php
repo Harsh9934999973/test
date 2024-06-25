@@ -14,9 +14,8 @@ class SubCategoryController extends Controller
 {
     public function index()
     {
-        $subCategories = SubCategory::select('sub_categories.*', 'categories.name as category_name', 'year_values.value')
+        $subCategories = SubCategory::select('sub_categories.*', 'categories.name as category_name')
     ->join('categories', 'sub_categories.category_id', '=', 'categories.id')
-    ->join('year_values', 'sub_categories.year_value_id', '=', 'year_values.id')
     ->orderBy('sub_categories.created_at', 'desc') // Order by created_at in descending order
     ->get();
 
@@ -29,7 +28,6 @@ class SubCategoryController extends Controller
         'category_id' => 'required|exists:categories,id',
         'name' => 'required|string|max:255',
         'hn_name' => 'nullable|string|max:255',
-        'year_value_id' => 'required|exists:year_values,id',
     ]);
 
     if ($validator->fails()) {
@@ -42,13 +40,25 @@ class SubCategoryController extends Controller
 
     $existingSubCategory = SubCategory::where('category_id', $request->input('category_id'))
         ->where('name', $request->input('name'))
-        ->where('year_value_id', $request->input('year_value_id'))
+        // ->where('year_value_id', $request->input('year_value_id'))
         ->first();
 
     if ($existingSubCategory) {
         return response()->json([
             'status' => 400,
-            'message' => 'Sub-category already exists for this category and year value'
+            'message' => 'Sub-category already exists for this category'
+        ]);
+    }
+
+    $existingSubCategoryFolder = SubCategory::where('category_id', $request->input('category_id'))
+        ->where('folder_name', $request->input('name'))
+        // ->where('year_value_id', $request->input('year_value_id'))
+        ->first();
+
+    if ($existingSubCategoryFolder) {
+        return response()->json([
+            'status' => 400,
+            'message' => 'Sub-category folder already exists for this category'
         ]);
     }
 
@@ -57,15 +67,14 @@ class SubCategoryController extends Controller
     $subCategory->name = $request->input('name');
     $subCategory->hn_name = $request->input('hn_name');
     $subCategory->created_by = Auth::id();
-    $subCategory->year_value_id = $request->input('year_value_id');
+    $subCategory->folder_name = strtolower(str_replace(' ', '_', $subCategory->name));
     $subCategory->save();
 
     $category = Category::find($request->input('category_id'));
-    $yearValue = YearValue::find($request->input('year_value_id'));
 
-    if ($category && $yearValue) {
+    if ($category) {
         $uploadsPath = public_path('uploads');
-        $categoryFolder = $category->name;
+        $categoryFolder = $category->folder_name;
 
         // Create category folder if it doesn't exist
         $categoryPath = $uploadsPath . '/' . $categoryFolder;
@@ -74,21 +83,15 @@ class SubCategoryController extends Controller
         }
 
         // Create subcategory folder
-        $subCategoryFolder = $categoryPath . '/' . $subCategory->name;
+        $subCategoryFolder = $categoryPath . '/' . $subCategory->folder_name;
         if (!file_exists($subCategoryFolder)) {
             mkdir($subCategoryFolder, 0755, true);
         }
 
-        // Create year_value folder inside subcategory folder
-        $yearValueFolder = $subCategoryFolder . '/' . $yearValue->value;
-        if (!file_exists($yearValueFolder)) {
-            mkdir($yearValueFolder, 0755, true);
-        }
     }
 
-    $subCategories = SubCategory::select('sub_categories.*', 'categories.name as category_name', 'year_values.value')
+    $subCategories = SubCategory::select('sub_categories.*', 'categories.name as category_name')
     ->join('categories', 'sub_categories.category_id', '=', 'categories.id')
-    ->join('year_values', 'sub_categories.year_value_id', '=', 'year_values.id')
     ->orderBy('sub_categories.created_at', 'desc') // Order by created_at in descending order
     ->get();
 
@@ -133,6 +136,18 @@ return response()->json([
 ]);
 }
 
+$existingSubCategoryFolder = SubCategory::where('category_id', $request->input('category_id'))
+        ->where('folder_name', $request->input('name'))
+        // ->where('year_value_id', $request->input('year_value_id'))
+        ->first();
+
+    if ($existingSubCategoryFolder) {
+        return response()->json([
+            'status' => 400,
+            'message' => 'Sub-category folder already exists for this category'
+        ]);
+    }
+
 
         $subCategory = SubCategory::find($id);
 
@@ -144,12 +159,11 @@ return response()->json([
         $subCategory->name = $request->input('name', $subCategory->name);
         $subCategory->hn_name = $request->input('hn_name', $subCategory->hn_name);
         $subCategory->created_by = $subCategory->created_by;
-        $subCategory->updated_by = $subCategory->updated_by;
+        $subCategory->updated_by = Auth::id();
         $subCategory->save();
 
-        $subCategories = SubCategory::select('sub_categories.*', 'categories.name as category_name', 'year_values.value')
+        $subCategories = SubCategory::select('sub_categories.*', 'categories.name as category_name')
     ->join('categories', 'sub_categories.category_id', '=', 'categories.id')
-    ->join('year_values', 'sub_categories.year_value_id', '=', 'year_values.id')
     ->orderBy('sub_categories.created_at', 'desc') // Order by created_at in descending order
     ->get();
 

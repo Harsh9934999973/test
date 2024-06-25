@@ -2,7 +2,9 @@ import React,{useEffect, useState} from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { subCategoryActions } from '../store/subCategorySlice';
 import { createSubCategoryData } from '../store/subCategory-actions';
+import { getYearTypeData, getYearValuesData } from '../store/year-actions';
 import { categoryActions } from '../store/categorySlice';
+import { yearActions } from '../store/yearSlice';
 import { getCategoriesData } from '../store/category-actions';
 import { useNavigate } from "react-router-dom";
 import CircularProgress from '@mui/material/CircularProgress';
@@ -26,12 +28,17 @@ const CreateSubCategory = () => {
     const success = useSelector((state) => state.subcategory.success);
     const failed = useSelector((state) => state.subcategory.failed);
     const categories = useSelector((state) => state.category.categories);
+    const yearTypes = useSelector((state) => state.year.yearTypes);
+    const yearTypeId = useSelector((state) => state.year.yearTypeId);
+    const yearValues = useSelector((state) => state.year.yearValues);
+    const yearValueId = useSelector((state) => state.year.yearValueId);
 
     const [validation, setValidation] = useState(false)
 
     useEffect(() => {
         dispatch(subCategoryActions.setLoading({loading:false}))
         dispatch(getCategoriesData())
+        dispatch(getYearTypeData())
         return () => {
             dispatch(subCategoryActions.setName({name:''}))
           dispatch(subCategoryActions.setHindiName({hindiName:''}))
@@ -40,6 +47,10 @@ const CreateSubCategory = () => {
           dispatch(categoryActions.setCategories({categories: []}))
           dispatch(subCategoryActions.setFailed({failed:false}))
           dispatch(subCategoryActions.setLoading({loading:true}))
+          dispatch(yearActions.setYearTypeId({yearTypeId:''}))
+          dispatch(yearActions.setYearValueId({yearValueId:''}))
+          dispatch(yearActions.setYearTypes({yearTypes: []}))
+          dispatch(yearActions.setyearValues({yearValues: []}))
         }
     }, []);
 
@@ -49,8 +60,14 @@ const CreateSubCategory = () => {
         }
     }, [success])
 
+    useEffect(() => {
+        if(yearTypeId !== ''){
+            dispatch(getYearValuesData(yearTypeId))
+        }
+    },[yearTypeId])
+
     const handleSubmit = async (e) => {
-        if(subCatName === ''){
+        if(subCategoryActions === ''){
             dispatch(subCategoryActions.setMessage({message:'Please enter a name'}))
             setValidation(true)
             return
@@ -60,8 +77,18 @@ const CreateSubCategory = () => {
             setValidation(true)
             return
         }
+        if(yearTypeId === ''){
+            dispatch(subCategoryActions.setMessage({message:'Please select a year type'}))
+            setValidation(true)
+            return
+        }
+        if(yearValueId === ''){
+            dispatch(subCategoryActions.setMessage({message:'Please select a year value'}))
+            setValidation(true)
+            return
+        }
         dispatch(subCategoryActions.setLoading({loading:true}))
-        dispatch(createSubCategoryData(subCatName, hnSubCatName, categoryId))
+        dispatch(createSubCategoryData(subCatName, hnSubCatName, categoryId, yearValueId))
     };
 
     const handleCloseFailed = (event, reason) => {
@@ -105,7 +132,30 @@ const CreateSubCategory = () => {
                                     ))}
                                 </select>
                             </div>
-                            
+                            <div className="mb-3">
+                                <label htmlFor="categoryId" className="form-label">Select Year Type<span className="text-danger">*</span></label>
+                                <select name="yearTypeId" id="yearTypeId" className="form-control" value={yearTypeId} onChange={(e) => {
+                                    dispatch(subCategoryActions.setMessage({message:''})) 
+                                    setValidation(false)
+                                    dispatch(yearActions.setYearTypeId({yearTypeId:e.target.value}))}} required>
+                                    <option value="">Choose Year Type...</option>
+                                    {yearTypes.map(category => (
+                                        <option key={category.id} value={category.id}>{category.name}</option>
+                                    ))}
+                                </select>
+                            </div>
+                            <div className="mb-3">
+                                <label htmlFor="categoryId" className="form-label">Select Year Value<span className="text-danger">*</span></label>
+                                <select name="yearValueId" id="yearValueId" className="form-control" value={yearValueId} onChange={(e) => {
+                                    dispatch(subCategoryActions.setMessage({message:''})) 
+                                    setValidation(false)
+                                    dispatch(yearActions.setYearValueId({yearValueId:e.target.value}))}} required>
+                                    <option value="">Choose Year Value...</option>
+                                    {yearValues.map(category => (
+                                        <option key={category.id} value={category.id}>{category.value}</option>
+                                    ))}
+                                </select>
+                            </div>
                             <div className="mb-3">
                                 <label htmlFor="subCatName" className="form-label">Sub-Category Name <span className="text-danger">*</span></label>
                                 <input type="text" name="subCatName" id="subCatName" className="form-control" value={subCatName} onChange={(e) => {

@@ -30,7 +30,7 @@ const CreateCategory = () => {
         dispatch(categoryActions.setLoading({loading:false}))
     return () => {
         // dispatch(categoryActions.setMessage({message:''})) 
-        //   dispatch(categoryActions.setLoading({loading:false}))
+          dispatch(categoryActions.setLoading({loading:true}))
           dispatch(categoryActions.setName({name:''}))
           dispatch(categoryActions.setHindiName({hindiName:''}))
           setValidation(false)
@@ -63,6 +63,7 @@ const CreateCategory = () => {
             setValidation(true)
             return
         }
+        dispatch(categoryActions.setLoading({loading:true}))
         dispatch(createCategoryData(name, hindiName))
       }
 

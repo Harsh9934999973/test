@@ -45,18 +45,26 @@ class CategoryController extends Controller
         ]);
     }
 
+    $existingCategoryFolder = Category::where('folder_name', $request->input('name'))->first();
+
+    if ($existingCategoryFolder) {
+        return response()->json([
+            'status' => 400,
+            'message' => 'Category folder already exists'
+        ]);
+    }
+
         $category = new Category();
         $category->name = $request->input('name');
         $category->hn_name = $request->input('hn_name');
         $category->created_by = Auth::id(); 
-        $category->folder_name = strtolower(str_replace(' ', '_', $category->name)); // Example folder name generation
+        $category->folder_name = strtolower(str_replace(' ', '_', $category->name));
 
         $category->save();
 
         $uploadsPath = public_path('uploads');
-    $categoryFolder = $category->folder_name; // Use category name for folder name
-
-    // Check if the directory doesn't already exist
+    $categoryFolder = $category->folder_name; 
+    
     if (!file_exists($uploadsPath . '/' . $categoryFolder)) {
         // Create the directory
         mkdir($uploadsPath . '/' . $categoryFolder, 0755, true);
@@ -88,6 +96,15 @@ class CategoryController extends Controller
         return response()->json([
             'status' => 400,
             'message' => 'Category already exists'
+        ]);
+    }
+
+    $existingCategoryFolder = Category::where('folder_name', $request->input('name'))->first();
+
+    if ($existingCategoryFolder) {
+        return response()->json([
+            'status' => 400,
+            'message' => 'Category folder already exists'
         ]);
     }
 
