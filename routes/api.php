@@ -18,7 +18,7 @@ Route::post('/signup', [AuthController::class, 'createAccount']);
 Route::post('/login', [AuthController::class, 'signin']);
 
 
-Route::get('/storage/{filename}', function ($filename) {
+Route::get('/storage/{id}', function ($id) {
     $path = storage_path('app/public/' . $filename);
 
     if (!Storage::disk('public')->exists($filename)) {
@@ -29,8 +29,9 @@ Route::get('/storage/{filename}', function ($filename) {
         'Content-Disposition' => 'inline; filename="' . $filename . '"',
         'Content-Type' => 'application/pdf',
     ]);
-})->where('filename', '^.+\.(pdf)$');
+});
 
+Route::get('/documents/{id}', [DocumentController::class, 'downloadAttachment'])->name('documents.download');
 
 Route::group(['middleware' => ['auth:sanctum']], function () {
 
@@ -71,6 +72,12 @@ Route::post('/documents', [DocumentController::class, 'store']);
 
 Route::get('/documents', [DocumentController::class, 'index']);
 
+Route::post('/documents/{id}', [DocumentController::class, 'update']);
+
+Route::get('/document/{id}', [DocumentController::class, 'destroy']);
+
+// Restore a soft deleted document
+Route::post('/documents/{id}/restore', [DocumentController::class, 'restore']);
 
 
 });

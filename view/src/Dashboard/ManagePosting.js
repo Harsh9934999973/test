@@ -213,6 +213,7 @@ function ManagePosting() {
     };
 
     useEffect(() => {
+        setUpdateScheme(false)
         fetchDocuments();   
         return () => {
         //   dispatch(schemesActions.setSchemes({schemes: []})) 
@@ -224,6 +225,7 @@ function ManagePosting() {
 
     useEffect(() => {
         if(updateScheme){
+        setUpdateScheme(false)
         fetchDocuments(); 
         }
         }, [updateScheme]);
@@ -257,10 +259,13 @@ function ManagePosting() {
             });
           };
 
-        const handleActionClick = (id) => {
-            const selectedScheme = schemes.filter(scheme => scheme.id === id)
+        const handleActionClick = (params) => {
+            console.log(params)
+            const pdfUrl = `${laravel_api}documents/${params.row.id}`;
+            window.open(pdfUrl, '_blank');
+            // const selectedScheme = schemes.filter(scheme => scheme.id === id)
             // dispatch(schemesActions.setSchemeSearch({schemeSearch: selectedScheme[0]})) 
-            return navigate(`/dashboard/schemeentry/${id}`);
+            return 
       }
 
   const handleCreateScheme = () => {
@@ -360,13 +365,41 @@ function ManagePosting() {
 //     dispatch(schemesActions.setEditSchemeCenterCode({editSchemeCenterCode:event.target.value}))
 //   }
 
-  const onSubmitUpdateScheme = () => {
+  const onSubmitUpdateScheme = async (e) => {
+    e.preventDefault();
 
-    
-    // dispatch(updateSchemeData(editSchemeId,editSchemeStateName,editSchemeCenterName,editSchemeStateCode,centerCode));
-    handleClose1()
+    const token = sessionStorage.getItem('hjhgj');
+    const formDataToSend = new FormData();
+    for (const key in formData) {
+        formDataToSend.append(key, formData[key]);
+    }
 
-  }
+    try {
+        const response = await fetch(`${laravel_api}documents/${editSchemeId}`, {
+            method: 'POST',
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+            body: formDataToSend,
+        });
+        if (!response.ok) {
+            throw new Error('Failed to upload document');
+        }
+        handleClose1()
+        setUpdateScheme(true)
+        setEditNotificationSuccess(true)
+        // if(res.status === 200){
+        //     handleClose1()
+        // setEditNotificationSuccess(true)
+        //     return
+        // } else {
+        //     handleClose1()
+        // }
+    } catch (error) {
+        console.error('Error uploading document:', error);
+        // Handle error message
+    }
+};
 
   const handleDeleteScheme = (id) => {
     handleOpen18(id)
@@ -386,30 +419,46 @@ function ManagePosting() {
       setAllowDeleteScheme(false)
     };
 
-    const handleSchemeDelete = () => {
-    //   dispatch(deleteSchemeData(deleteSchemeId))
-      handleClose18()
-    }
+    const handleSchemeDelete = async () => {
+        try {
+          const response = await fetch(`${laravel_api}document/${deleteSchemeId}`, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          });
+      
+          if (!response.ok) {
+            throw new Error('Failed to delete document');
+          }
+          handleClose18()
+          setUpdateScheme(true)
+          setDeleteNotificationSuccess(true) 
+        } catch (error) {
+          console.error('Error deleting document:', error);
+        }
+      };
+      
     
       const columns = React.useMemo(
         () => [
-            { field: 'type', hideable: false, headerName: 'Type', headerAlign: 'center', headerClassName: 'themeheader', cellClassName: 'themecell', width: 150 },
-  { field: 'yearValue', hideable: false, headerName: 'Year', headerAlign: 'center', headerClassName: 'themeheader', cellClassName: 'themecell', width: 150 },
-  { field: 'category', hideable: false, headerName: 'Category', headerAlign: 'center', headerClassName: 'themeheader', cellClassName: 'themecell', width: 150 },
-  { field: 'subCategory', hideable: false, headerName: 'Sub-Category', headerAlign: 'center', headerClassName: 'themeheader', cellClassName: 'themecell', width: 150 },
-  { field: 'doc_nos', hideable: false, headerName: 'Document Number', headerAlign: 'center', headerClassName: 'themeheader', cellClassName: 'themecell', width: 150 },
-  { field: 'doc_date', hideable: false, headerName: 'Document Date', headerAlign: 'center', headerClassName: 'themeheader', cellClassName: 'themecell', width: 150 },
-  { field: 'ref_nos', hideable: false, headerName: 'Reference Number', headerAlign: 'center', headerClassName: 'themeheader', cellClassName: 'themecell', width: 150 },
-  { field: 'ref_date', hideable: false, headerName: 'Reference Date', headerAlign: 'center', headerClassName: 'themeheader', cellClassName: 'themecell', width: 150 },
-  { field: 'title', hideable: false, headerName: 'Title', headerAlign: 'center', headerClassName: 'themeheader', cellClassName: 'themecell', renderCell: renderCellExpand, width: 200  },
+            { field: 'type', hideable: false, headerName: 'Type', headerAlign: 'left', headerClassName: 'themeheader', cellClassName: 'themecell', width: 150 },
+  { field: 'yearValue', hideable: false, headerName: 'Year', headerAlign: 'left', headerClassName: 'themeheader', cellClassName: 'themecell', width: 150 },
+  { field: 'category', hideable: false, headerName: 'Category', headerAlign: 'left', headerClassName: 'themeheader', cellClassName: 'themecell', width: 150 },
+  { field: 'subCategory', hideable: false, headerName: 'Sub-Category', headerAlign: 'left', headerClassName: 'themeheader', cellClassName: 'themecell', width: 150 },
+  { field: 'doc_nos', hideable: false, headerName: 'Document Number', headerAlign: 'left', headerClassName: 'themeheader', cellClassName: 'themecell', width: 150 },
+  { field: 'doc_date', hideable: false, headerName: 'Document Date', headerAlign: 'left', headerClassName: 'themeheader', cellClassName: 'themecell', width: 150 },
+  { field: 'ref_nos', hideable: false, headerName: 'Reference Number', headerAlign: 'left', headerClassName: 'themeheader', cellClassName: 'themecell', width: 150 },
+  { field: 'ref_date', hideable: false, headerName: 'Reference Date', headerAlign: 'left', headerClassName: 'themeheader', cellClassName: 'themecell', width: 150 },
+  { field: 'title', hideable: false, headerName: 'Title', headerAlign: 'left', headerClassName: 'themeheader', cellClassName: 'themecell', renderCell: renderCellExpand, width: 200  },
 //   { field: 'attachment', hideable: false, headerName: 'Attachment', headerAlign: 'center', headerClassName: 'themeheader', cellClassName: 'themecell', flex: 1 },
-  { field: 'new_tag', hideable: false, headerName: 'New Tag', headerAlign: 'center', headerClassName: 'themeheader', cellClassName: 'themecell', width: 100 },
-  { field: 'new_tag_day', hideable: false, headerName: 'New Tag Day', headerAlign: 'center', headerClassName: 'themeheader', cellClassName: 'themecell', width: 120 },
+  { field: 'new_tag', hideable: false, headerName: 'New Tag', headerAlign: 'left', headerClassName: 'themeheader', cellClassName: 'themecell', width: 100 },
+  { field: 'new_tag_day', hideable: false, headerName: 'New Tag Day', headerAlign: 'left', headerClassName: 'themeheader', cellClassName: 'themecell', width: 120 },
         // { field: 'center_name', headerName: 'Center Scheme Name',flex: 2, headerClassName: 'themeheader',headerAlign: 'center',cellClassName: 'themecell1',renderCell: renderCellExpand },
         {
           field: 'edit',
           headerName: 'Edit',
-          width: 120,
+          width: 75,
           headerClassName: 'themeheader',
           cellClassName: 'themecell1',
           renderCell: (params) => <SchemeEditButton status={params} handleEditScheme={handleEditScheme}/>
@@ -417,7 +466,7 @@ function ManagePosting() {
         {
           field: 'delete',
           headerName: 'Delete',
-          width: 120,
+          width: 75,
           headerClassName: 'themeheader',
           cellClassName: 'themecell1',
           renderCell: (params) => <SchemeDeleteButton status={params} handleDeleteScheme={handleDeleteScheme}/>
@@ -425,16 +474,16 @@ function ManagePosting() {
         {
           field: 'actions',
           type: 'actions',
-          width: 120,
-          headerName: 'Actions',
+          width: 90,
+          headerName: 'View Document',
           headerAlign: 'center', 
           headerClassName: 'themeheader',
           cellClassName: 'themecell',
           getActions: (params) => [
             <GridActionsCellItem
-              icon={<div className='f6'><PageviewIcon color="actions"/><span className='ml2 b'>View Details</span></div>}
+              icon={<div className='f6'><PageviewIcon color="actions"/></div>}
               label="Delete"
-              onClick={() => handleActionClick(params.id)}
+              onClick={() => handleActionClick(params)}
             />,
           ],
         },
@@ -522,7 +571,7 @@ function ManagePosting() {
       <div className="card">
         <div className="card-body">
           <div className="col-md-12">
-            <h5 className="card-title fw-semibold mb-4">Edit Document</h5>
+            {/* <h5 className="card-title fw-semibold mb-4">Edit Document</h5> */}
 
             <form onSubmit={onSubmitUpdateScheme} encType="multipart/form-data">
 
@@ -591,7 +640,7 @@ function ManagePosting() {
                 <input type="text" name="title" id="title" className="form-control" value={formData.title} onChange={handleInputChange} required />
               </div>
               <div className="row">
-                <div className="mb-3 col-md-6">
+                <div className="">
                   <label htmlFor="attachment" className="form-label">Attachment <span className="text-danger">* (Maximum 2MB file.)</span></label>
                   <input type="file" name="attachment" id="attachment" className="form-control col-md-8" onChange={handleAttachmentChange} accept=".pdf,.doc,.docx,image/*" />
                   <small id="size_error" style={{ display: 'none' }} className="text-danger">Please check File attachment size or file type.</small>
