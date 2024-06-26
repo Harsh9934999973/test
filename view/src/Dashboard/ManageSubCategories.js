@@ -148,8 +148,6 @@ const ManageSubCategories = () => {
     { field: 'name', headerName: 'Name', width: 150, editable: true },
     { field: 'hn_name', headerName: 'Hindi Name', width: 150, editable: true },
     { field: 'category_name', headerName: 'Category', width: 150, editable: false },
-    { field: 'value', headerName: 'Year', width: 150, editable: false },
-    { field: 'year_name', headerName: 'Year Type', width: 150, editable: false },
     { field: 'folder_name', headerName: 'Folder Name', width: 150, editable: false },
     // {
     //   field: 'age',

@@ -7,12 +7,30 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\SubCategoryController;
 use App\Http\Controllers\YearTypeController;
 use App\Http\Controllers\YearValueController;
+use App\Http\Controllers\DocumentController;
+use Illuminate\Support\Facades\Storage;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
 
 
 Route::post('/signup', [AuthController::class, 'createAccount']);
 
 Route::post('/login', [AuthController::class, 'signin']);
+
+
+Route::get('/storage/{filename}', function ($filename) {
+    $path = storage_path('app/public/' . $filename);
+
+    if (!Storage::disk('public')->exists($filename)) {
+        abort(404);
+    }
+
+    return response()->file($path, [
+        'Content-Disposition' => 'inline; filename="' . $filename . '"',
+        'Content-Type' => 'application/pdf',
+    ]);
+})->where('filename', '^.+\.(pdf)$');
+
 
 Route::group(['middleware' => ['auth:sanctum']], function () {
 
@@ -48,6 +66,8 @@ Route::put('/year-values/{id}', [YearValueController::class, 'update']);
 
 // Route for deleting a specific YearValue by its ID
 Route::delete('/year-values/{id}', [YearValueController::class, 'destroy']);
+
+Route::post('/documents', [DocumentController::class, 'store']);
 
 
 });

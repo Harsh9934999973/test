@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Category;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
 
 class CategoryController extends Controller
@@ -58,17 +59,21 @@ class CategoryController extends Controller
         $category->name = $request->input('name');
         $category->hn_name = $request->input('hn_name');
         $category->created_by = Auth::id(); 
-        $category->folder_name = strtolower(str_replace(' ', '_', $category->name));
+        $category->folder_name = $category->name;
 
         $category->save();
 
-        $uploadsPath = public_path('uploads');
-    $categoryFolder = $category->folder_name; 
+        if ($category) {
+            // Define the directory path (public/uploads/category_name)
+            $categoryFolder = 'public/uploads/' . $category->name;
     
-    if (!file_exists($uploadsPath . '/' . $categoryFolder)) {
-        // Create the directory
-        mkdir($uploadsPath . '/' . $categoryFolder, 0755, true);
-    }
+            // Create category folder if not exists
+            if (!Storage::exists($categoryFolder)) {
+                Storage::makeDirectory($categoryFolder);
+            }
+        } else {
+            return response()->json(['message' => 'Category not found', 'status' => 404]);
+        }
 
         $categories = Category::orderBy('created_at', 'desc')->get();
 

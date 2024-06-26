@@ -5,6 +5,7 @@ import './custom.css';
 import Loading from './Loading';
 import Signin from './Signin';
 import ErrorPage from './ErrorPage';
+import DocumentPostingForm from './Dashboard/DocumentPostingForm';
 const Dashboard = React.lazy(() => import('./Dashboard/Dashboard'));
 const Main = React.lazy(() => import('./Dashboard/Main'));
 const CreateCategory = React.lazy(() => import('./Dashboard/CreateCategory'));
@@ -25,6 +26,7 @@ function App() {
               <Route path='managecategory' element={<ManageCategories />}/>
               <Route path='createsubcategory' element={<CreateSubCategory />}/>
               <Route path='managesubcategory' element={<ManageSubCategories />}/>
+              <Route path='uploaddocument' element={<DocumentPostingForm />}/>
               </Route>
       <Route path='/errorpage' element={<ErrorPage />} />
       </Routes>

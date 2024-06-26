@@ -112,7 +112,7 @@ const Signin = () => {
                     <input type="email" name="email" className="form-control" id="email" aria-describedby="emailHelp" value={email} onChange={onEmailChangeHandler}/>
                   </div>
                   <div className="mb-4">
-                    <label for="password" className="form-label">Password</label>
+                    <label htmlFor="password" className="form-label">Password</label>
                     <input type="password" name="password" className="form-control" id="password"  value={password} onChange={onPasswordChangeHandler} />
                   </div>
                   

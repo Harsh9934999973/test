@@ -67,27 +67,16 @@ class SubCategoryController extends Controller
     $subCategory->name = $request->input('name');
     $subCategory->hn_name = $request->input('hn_name');
     $subCategory->created_by = Auth::id();
-    $subCategory->folder_name = strtolower(str_replace(' ', '_', $subCategory->name));
+    $subCategory->folder_name = $subCategory->name;
     $subCategory->save();
 
     $category = Category::find($request->input('category_id'));
-
     if ($category) {
-        $uploadsPath = public_path('uploads');
-        $categoryFolder = $category->folder_name;
+        $categoryFolder = 'public/uploads/' . $category->name;
+        Storage::makeDirectory($categoryFolder); // Create category folder if not exists
 
-        // Create category folder if it doesn't exist
-        $categoryPath = $uploadsPath . '/' . $categoryFolder;
-        if (!file_exists($categoryPath)) {
-            mkdir($categoryPath, 0755, true);
-        }
-
-        // Create subcategory folder
-        $subCategoryFolder = $categoryPath . '/' . $subCategory->folder_name;
-        if (!file_exists($subCategoryFolder)) {
-            mkdir($subCategoryFolder, 0755, true);
-        }
-
+        $subCategoryFolder = $categoryFolder . '/' . $subCategory->name;
+        Storage::makeDirectory($subCategoryFolder); // Create sub-category folder
     }
 
     $subCategories = SubCategory::select('sub_categories.*', 'categories.name as category_name')
@@ -101,7 +90,7 @@ class SubCategoryController extends Controller
 
     public function show($id)
     {
-        $subCategory = SubCategory::find($id);
+        $subCategory = SubCategory::where('category_id', $id)->get();
 
         if (!$subCategory) {
             return response()->json(['status' => 404, 'message' => 'Sub category not found'], 404);

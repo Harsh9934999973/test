@@ -58,6 +58,24 @@ function Sidenav({clickHandler}) {
                 </Link>
                 </nav>
             </div>
+            <div className="sb-sidenav-menu-heading"><span className='white'>DOCUMENT UPLOAD</span></div>
+            <a className="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseDocument" aria-expanded="false" aria-controls="collapseDocument">
+                <div className="sb-nav-link-icon"><i className="fas fa-columns"></i></div>
+                <span className='white'>DOCUMENTS</span>
+                <div className="sb-sidenav-collapse-arrow"><i className="fas fa-angle-down"></i></div>
+            </a>
+            <div className="collapse" id="collapseDocument" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
+                <nav className="sb-sidenav-menu-nested nav">
+                <Link className="nav-link" to='/dashboard/uploaddocument'>
+                <div className="sb-nav-link-icon"><i className="fas fa-chart-area"></i></div>
+                <span className='white'>Upload Document</span>
+                </Link>
+                <Link className="nav-link" to='/dashboard/managedocument'>
+                <div className="sb-nav-link-icon"><i className="fas fa-chart-area"></i></div>
+                <span className='white'>Manage Document</span>
+                </Link>
+                </nav>
+            </div>
             {/*<div className="sb-sidenav-menu-heading"><span className='white'>Outcome Budget 2024-25</span></div>
             <Link className="nav-link" to='/dashboard/divisionmigrationsummary'>
             <div className="sb-nav-link-icon"><i className="fas fa-chart-area"></i></div>
