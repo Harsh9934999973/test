@@ -69,5 +69,8 @@ Route::delete('/year-values/{id}', [YearValueController::class, 'destroy']);
 
 Route::post('/documents', [DocumentController::class, 'store']);
 
+Route::get('/documents', [DocumentController::class, 'index']);
+
+
 
 });

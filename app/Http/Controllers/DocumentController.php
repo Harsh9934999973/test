@@ -12,6 +12,16 @@ use Illuminate\Support\Facades\Storage;
 
 class DocumentController extends Controller
 {
+
+    public function index()
+    {
+        $documents = Document::with(['subCategory.category', 'yearValue.yearType'])
+                        ->orderByDesc('created_at')
+                        ->get();
+
+        return response()->json(['documents' => $documents, 'status' => 200]);
+    }
+
     public function store(Request $request)
     {
         $request->validate([
